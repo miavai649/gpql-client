@@ -1,0 +1,21 @@
+h1{
+  font-size: 50px;
+  text-align: center;
+}
+
+#add-book{
+  position: relative;
+  bottom: -500px;
+  left: 50px;
+}
+
+.field{
+  width: 280px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#btn{
+  padding: 8px 15px;
+}
