@@ -1,9 +1,9 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { addBookMutation, getAuthorQuery } from "../Queries/Queries";
+import { addBookMutation, getAuthorsQuery, getBooksQuery } from "../Queries/Queries";
 
 const AddBook = () => {
-  const { loading, data } = useQuery(getAuthorQuery);
+  const { loading, data } = useQuery(getAuthorsQuery);
   // console.log("🚀 ~ file: AddBook.jsx:16 ~ AddBook ~ data:", data)
 
 //   console.log(createBook);
@@ -14,7 +14,9 @@ const AddBook = () => {
 
 const [name, setName] = useState('')
 const [genre, setGenre] = useState('')
-const [authorId, setauthorId] = useState('')
+  const [authorId, setauthorId] = useState('')
+  
+
 
   const displayAuthor = () => {
     if (loading) {
@@ -28,7 +30,7 @@ const [authorId, setauthorId] = useState('')
     }
   };
 
-  const [addBook, { error }] = useMutation(addBookMutation);
+  const [addBook, {data:mutatedData, error:mError }] = useMutation(addBookMutation);
 
   // const handleForm = (e) =>{
   //     e.preventDefault()
@@ -44,25 +46,17 @@ const [authorId, setauthorId] = useState('')
   //     createBook(addBook)
   // };
 
-  const handleForm = async e => {
+  const handleForm = e => {
     e.preventDefault();
-
-    try {
-      const { data } = await addBook({
-        variables: {
-          name,
-          genre,
-          authorId
-        }
-      });
-      console.log("🚀 ~ file: AddBook.jsx:55 ~ handleForm ~ data:", data)
-      
-      setName('');
-      setGenre('')
-      setauthorId('')
-    } catch (error) {
-        console.error(error);
-    }
+    addBook({
+      variables: {
+        name,
+        genre,
+        authorId
+      },
+      refetchQueries: [{query: getBooksQuery}]
+    })
+    e.target.reset()
   };
 
   return (
